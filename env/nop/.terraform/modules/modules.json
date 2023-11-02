@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"backup_policy","Source":"../../modules/backup-policy","Dir":"../../modules/backup-policy"},{"Key":"service_account","Source":"../../modules/service-account","Dir":"../../modules/service-account"},{"Key":"ubuntu_vm","Source":"../../modules/ubuntu-vm","Dir":"../../modules/ubuntu-vm"}]}
