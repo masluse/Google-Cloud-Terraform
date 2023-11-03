@@ -29,6 +29,7 @@ resource "google_compute_instance" "default" {
 }
 
 resource "google_compute_disk_resource_policy_attachment" "attachment" {
+  count   = var.backup_policy != "" ? 1 : 0
   project = var.project_id
   name    = var.backup_policy
   disk    = var.name

@@ -1,7 +1,7 @@
 locals {
   project_id = "prj-obilab-5873628173-mrtf" # Project ID
   region     = "europe-west6"
-  zone         = "europe-west6-a" # Zone
+  zone       = "europe-west6-a" # Zone
 
   # Service Account configuration
   sa1_account_id   = "sa-manuel-manuel02"   # SA Account ID
@@ -15,9 +15,9 @@ locals {
   dp1_days_in_cycle  = "1"
 
   # VM configuration
-  vm1_name         = "vm-1"           # VM name
-  vm1_type         = "e2-micro"       # VM type
-  vm1_network_name = "default"        # Network name for the Vm
+  vm1_name         = "vm-1"     # VM name
+  vm1_type         = "e2-micro" # VM type
+  vm1_network_name = "default"  # Network name for the Vm
   vm1_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030"
   vm1_disk_size    = 10
 
