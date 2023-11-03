@@ -49,5 +49,5 @@ module "disk2" {
   disk_type     = local.disk2_type
   disk_size     = local.disk2_size
   #backup_policy = module.dp1.snapshot_schedule_id
-  instance_id   = module.vm1.compute_instance_id
+  #instance_id   = module.vm1.compute_instance_id
 }
