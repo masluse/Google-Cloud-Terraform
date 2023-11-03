@@ -30,6 +30,10 @@ module "vm1" {
   image                 = local.vm1_image                   # The boot image for the VM.
   backup_policy         = module.dp1.snapshot_schedule.name # Backup policy to be associated with the VM.
   service_account_email = module.sa1.service_account.email  # Service account to be associated with the VM.
+
+  depends_on = [
+    module.dp1, module.sa1
+  ]
 }
 
 # Use the 'disks' module to create a persistent disk with the given specifications.
@@ -76,5 +80,5 @@ module "data-vm1" {
 }
 
 output "instance_ip_addr" {
-  value = module.data-vm1.serverinfo
+  value = module.data-vm1.serverinfo.network
 }

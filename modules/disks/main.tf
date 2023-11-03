@@ -6,7 +6,7 @@ resource "google_compute_disk" "default" {
   size    = var.disk_size
 }
 
-resource "google_compute_disk_resource_policy_attachment" "attachment" {
+resource "google_compute_disk_resource_policy_attachment" "default" {
   count   = var.backup_policy != "" ? 1 : 0
   project = var.project_id
   name    = var.backup_policy
