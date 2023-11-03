@@ -1,3 +1,8 @@
+variable "project_id" {
+  description = "The project that the service account will belong to."
+  type        = string
+}
+
 variable "account_id" {
   description = "The ID of the service account."
   type        = string
@@ -8,7 +13,3 @@ variable "display_name" {
   type        = string
 }
 
-variable "project_id" {
-  description = "The project that the service account will belong to."
-  type        = string
-}
