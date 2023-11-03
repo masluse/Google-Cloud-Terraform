@@ -34,4 +34,8 @@ resource "google_compute_disk_resource_policy_attachment" "attachment" {
   name    = var.backup_policy
   disk    = var.name
   zone    = var.zone
+
+  depends_on = [
+    resource.google_compute_instance.default
+  ]
 }

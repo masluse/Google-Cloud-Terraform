@@ -1,4 +1,4 @@
-resource "google_compute_resource_policy" "snapshot_schedule" {
+resource "google_compute_resource_policy" "default" {
   name    = var.name
   region  = var.region
   project = var.project_id

@@ -31,7 +31,7 @@ variable "zone" {
 variable "backup_policy" {
   type        = string
   description = "Backup policy for the disk"
-  default = ""
+  default     = ""
 }
 
 variable "image" {
