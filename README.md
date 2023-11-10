@@ -12,7 +12,8 @@ Terraform (version 1.6 or newer)
 Google Cloud access credentials (via cloud provider CLI)
 An initialized Google Cloud project where resources will be deployed
 ## Module Usage
-1. ansible/disk_add
+### ansible/disk_add
+
 Defines an Ansible module for adding disks, linking it to a specific VM, and setting up associated configurations. It ensures the module is executed only after the necessary VM and disk provisioning.
 ```
 module "ansible1" {
@@ -30,7 +31,8 @@ module "ansible1" {
   depends_on = [module.vm1, module.disk1]
 }
 ```
-2. disk-policy
+### disk-policy
+
 This module creates a disk backup policy, defining various parameters such as project ID, region, policy name, description, and the backup schedule.
 ```
 # This module block creates a disk backup policy using a specified module.
@@ -45,7 +47,8 @@ module "dp1" {
   days_in_cycle  = local.dp1_days_in_cycle     # Defines the frequency of the backup cycle in days.
 }
 ```
-3. disks
+### disks
+
 Creates a persistent disk in a specified zone, assigning it a name, type, size, and linking it to both a VM instance and a backup policy. Dependencies are managed to ensure correct order of resource creation.
 ```
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
@@ -65,7 +68,8 @@ module "disk1" {
   ]
 }
 ```
-4. service-account
+### service-account
+
 Facilitates the creation of a new service account, providing details like account ID, display name, and the project ID where it will be created.
 ```
 # This block declares a Terraform module to create a new service account.
@@ -77,7 +81,8 @@ module "sa1" {
 }
 ```
 
-5. virtual-machine
+### virtual-machine
+
 This module block is responsible for creating a VM instance with specified properties such as project ID, name, type, zone, network, and disk size. It also associates the VM with a backup policy and a service account.
 ```
 # Module block for creating a virtual machine (VM) instance with specified properties.
@@ -100,7 +105,8 @@ module "vm1" {
 }
 ```
 ## Configuring Ansible for gcloud SSH
-1. env/nop/ansible.cfg
+### env/nop/ansible.cfg
+
 Configures Ansible for SSH connections, privilege escalation, and execution strategy. It's tailored to enable efficient and secure management of cloud resources.
 ```
 [ssh_connection]
@@ -118,7 +124,8 @@ interpreter_python = /usr/bin/python3
 # Somehow important to enable parallel execution...
 strategy = free
 ```
-2. env/nop/misc/gssh.sh
+### env/nop/misc/gssh.sh
+
 A custom script to enhance Ansible's SSH capabilities, especially for Google Cloud environments. It specifies command execution patterns, SSH connection settings, and integrates with gcloud compute ssh for optimized operations.
 ```
 #!/bin/bash
