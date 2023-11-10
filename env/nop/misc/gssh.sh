@@ -14,7 +14,7 @@ socket="/tmp/ansible-ssh-${host}-22-iap"
 
 gcloud_args="
 --tunnel-through-iap
---zone=europe-west6-a
+--zone=$GCLOUD_ARGS
 --quiet
 --no-user-output-enabled
 --

@@ -54,53 +54,20 @@ module "disk1" {
   ]
 }
 
-# Module block for creating a second persistent disk similar to 'disk1'.
-module "disk2" {
-  source        = "../../modules/disks"                          # Path to the disks module.
-  project_id    = local.project_id                               # Google Cloud project ID for disk creation.
-  zone          = local.zone                                     # Zone where the disk will be deployed.
-  disk_name     = local.disk2_name                               # Name assigned to the disk.
-  disk_type     = local.disk2_type                               # Type of the disk (e.g., pd-standard).
-  disk_size     = local.disk2_size                               # Size of the disk in GB.
-  backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
-  instance_id   = module.vm1.google_compute_instance.name        # ID of the VM instance to which the disk will be attached.
-
-  # Ensures that the disk is created only after the specified modules are provisioned.
-  depends_on = [
-    module.vm1, module.dp1
-  ]
-}
-
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
   source         = "../../modules/ansible"               # Path to the Ansible module.
   path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
   public_ip      = local.vm1_name                        # Public IP of the provisioned VM.
-
+  vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
     disk_name = local.disk1_name,
-    mnt_name  = local.mnt_name1
+    mnt_name  = local.disk1_mnt_name
   }
 
   # Ensures that Ansible is executed only after VM and disk provisioning.
   depends_on = [module.vm1, module.disk1]
-}
-
-# Module block for running Ansible playbooks against a second provisioned VM.
-module "ansible2" {
-  source         = "../../modules/ansible"               # Location of the Ansible module.
-  path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook file.
-  public_ip      = local.vm1_name                        # Public IP address of the provisioned VM.
-
-  # Extra variables to pass to Ansible.
-  ansible_extra_vars = {
-    disk_name = local.disk2_name,
-    mnt_name  = local.mnt_name2
-  }
-
-  # Ensures that Ansible runs after the VM and the second disk are provisioned.
-  depends_on = [module.vm1, module.disk2]
 }
 
 output "gcloud-connect" {

@@ -1,13 +1,13 @@
 # Resource block for provisioning a Google Compute Engine instance.
 resource "google_compute_instance" "default" {
-  name         = var.name            # Name of the VM instance.
-  machine_type = var.type            # Machine type (CPU and memory) for the VM.
-  zone         = var.zone            # Zone for VM deployment.
+  name         = var.name # Name of the VM instance.
+  machine_type = var.type # Machine type (CPU and memory) for the VM.
+  zone         = var.zone # Zone for VM deployment.
 
   # Configuration for the boot disk of the VM.
   boot_disk {
     initialize_params {
-      image = var.image    # Image used for the boot disk.
+      image = var.image     # Image used for the boot disk.
       size  = var.disk_size # Size of the boot disk.
     }
   }
@@ -19,7 +19,7 @@ resource "google_compute_instance" "default" {
 
   # Service account configuration for the VM.
   service_account {
-    email  = var.service_account_email             # Email of the service account associated with the VM.
+    email  = var.service_account_email                          # Email of the service account associated with the VM.
     scopes = ["https://www.googleapis.com/auth/cloud-platform"] # Access scopes for the service account.
   }
 

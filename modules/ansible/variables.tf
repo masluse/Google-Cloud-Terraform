@@ -14,6 +14,11 @@ variable "ansible_extra_vars" {
   default     = {}
 }
 
+variable "vm_zone" {
+  type        = string
+  description = "Zone of the vm that Ansible should connect to"
+}
+
 # Local values for processing extra variables
 locals {
   # Converts ansible_extra_vars map to a string format for the ansible command

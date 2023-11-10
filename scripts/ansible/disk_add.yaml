@@ -6,7 +6,7 @@
   tasks:
     # Find and register the device name for the specified disk
     - name: "Find the device name for the given disk"
-      command: "readlink -f /dev/disk/by-id/google-persistent-{{ disk_name }}"
+      shell: "readlink -f /dev/disk/by-id/google-*{{ disk_name }}"
       register: google_disk_link
       changed_when: false
 

@@ -24,14 +24,8 @@ locals {
   vm1_disk_size    = 10                                            # Size of the VM's primary disk in GB.
 
   # Additional disk configurations for attachable storage.
-  disk1_name = "disk-1"      # Identifier for the first additional disk.
-  disk1_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk1_size = 10            # Size of the disk in GB.
-
-  disk2_name = "disk-2"      # Identifier for the second additional disk.
-  disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk2_size = 10            # Size of the disk in GB.
-
-  mnt_name1 = "group"
-  mnt_name2 = "personal"
+  disk1_name     = "disk-1"      # Identifier for the first additional disk.
+  disk1_type     = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
+  disk1_size     = 10            # Size of the disk in GB.
+  disk1_mnt_name = "group"
 }
