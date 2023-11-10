@@ -1,0 +1,52 @@
+---
+# Playbook for setting up storage on a Google Cloud VM
+- name: "Setup disk storage in Google Cloud"
+  hosts: all
+  become: yes # Run tasks with administrative privileges
+
+  tasks:
+    # Find and register the device name for the specified disk
+    - name: "Find the device name for the given disk"
+      command: "readlink -f /dev/disk/by-id/google-persistent-{{ disk_name }}"
+      register: google_disk_link
+      changed_when: false
+
+    # Set a variable with the device name
+    - name: "Set the device name variable"
+      set_fact:
+        device_name: "{{ google_disk_link.stdout }}"
+
+    # Create a physical volume on the Google Cloud Disk
+    - name: "Create a physical volume on Google Cloud Disk"
+      community.general.lvg:
+        pvs: "{{ device_name }}"
+        vg: "vg_{{ mnt_name }}"
+
+    # Create a logical volume using all available space
+    - name: "Create a logical volume with all available space"
+      community.general.lvol:
+        vg: "vg_{{ mnt_name }}"
+        lv: "lv_{{ mnt_name }}"
+        size: 100%FREE
+
+    # Create a filesystem on the logical volume
+    - name: "Create a filesystem on the logical volume"
+      community.general.filesystem:
+        fstype: xfs
+        dev: "/dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
+        opts: "-L {{ mnt_name }}"
+
+    # Create a directory for the mount point
+    - name: "Create mount point"
+      ansible.builtin.file:
+        path: "/mnt/{{ mnt_name }}"
+        state: directory
+
+    # Add filesystem to fstab and mount it
+    - name: "Add filesystem to fstab and mount"
+      ansible.posix.mount:
+        path: "/mnt/{{ mnt_name }}"
+        src: "LABEL={{ mnt_name }}"
+        fstype: xfs
+        opts: defaults
+        state: mounted

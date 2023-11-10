@@ -31,4 +31,7 @@ locals {
   disk2_name = "disk-2"      # Identifier for the second additional disk.
   disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk2_size = 10            # Size of the disk in GB.
+
+  mnt_name1 = "group"
+  mnt_name2 = "personal"
 }
