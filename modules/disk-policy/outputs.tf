@@ -1,4 +1,3 @@
-output "snapshot_schedule" {
-  description = "The ID of the snapshot schedule"
+output "google_compute_resource_policy" {
   value       = google_compute_resource_policy.default
 }

@@ -20,16 +20,16 @@ module "dp1" {
 
 # Module block for creating a virtual machine (VM) instance with specified properties.
 module "vm1" {
-  source                = "../../modules/virtual-machine"   # Path to the virtual machine module.
-  project_id            = local.project_id                  # ID of the Google Cloud project where the VM is created.
-  name                  = local.vm1_name                    # Name assigned to the VM instance.
-  type                  = local.vm1_type                    # Machine type for the VM, defining CPU and memory.
-  zone                  = local.zone                        # Zone where the VM will be deployed.
-  network_name          = local.vm1_network_name            # Network to which the VM will be connected.
-  disk_size             = local.vm1_disk_size               # Size of the VM's boot disk.
-  image                 = local.vm1_image                   # Boot image used for the VM.
-  backup_policy         = module.dp1.snapshot_schedule.name # Backup policy associated with the VM.
-  service_account_email = module.sa1.service_account.email  # Service account email associated with the VM.
+  source                = "../../modules/virtual-machine"                # Path to the virtual machine module.
+  project_id            = local.project_id                               # ID of the Google Cloud project where the VM is created.
+  name                  = local.vm1_name                                 # Name assigned to the VM instance.
+  type                  = local.vm1_type                                 # Machine type for the VM, defining CPU and memory.
+  zone                  = local.zone                                     # Zone where the VM will be deployed.
+  network_name          = local.vm1_network_name                         # Network to which the VM will be connected.
+  disk_size             = local.vm1_disk_size                            # Size of the VM's boot disk.
+  image                 = local.vm1_image                                # Boot image used for the VM.
+  backup_policy         = module.dp1.google_compute_resource_policy.name # Backup policy associated with the VM.
+  service_account_email = module.sa1.google_service_account.email        # Service account email associated with the VM.
 
   # Ensures that the VM is created only after the specified modules are successfully provisioned.
   depends_on = [
@@ -39,14 +39,14 @@ module "vm1" {
 
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
-  source        = "../../modules/disks"             # Path to the disks module.
-  project_id    = local.project_id                  # Google Cloud project ID for disk creation.
-  zone          = local.zone                        # Zone where the disk will be deployed.
-  disk_name     = local.disk1_name                  # Name assigned to the disk.
-  disk_type     = local.disk1_type                  # Type of the disk (e.g., pd-standard).
-  disk_size     = local.disk1_size                  # Size of the disk in GB.
-  backup_policy = module.dp1.snapshot_schedule.name # Backup policy to be associated with the disk.
-  instance_id   = module.vm1.compute_instance.name  # ID of the VM instance to which the disk will be attached.
+  source        = "../../modules/disks"                          # Path to the disks module.
+  project_id    = local.project_id                               # Google Cloud project ID for disk creation.
+  zone          = local.zone                                     # Zone where the disk will be deployed.
+  disk_name     = local.disk1_name                               # Name assigned to the disk.
+  disk_type     = local.disk1_type                               # Type of the disk (e.g., pd-standard).
+  disk_size     = local.disk1_size                               # Size of the disk in GB.
+  backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
+  instance_id   = module.vm1.google_compute_instance.name        # ID of the VM instance to which the disk will be attached.
 
   # Ensures that the disk is created only after the specified modules are provisioned.
   depends_on = [
@@ -56,14 +56,14 @@ module "disk1" {
 
 # Module block for creating a second persistent disk similar to 'disk1'.
 module "disk2" {
-  source        = "../../modules/disks"             # Path to the disks module.
-  project_id    = local.project_id                  # Google Cloud project ID for disk creation.
-  zone          = local.zone                        # Zone where the disk will be deployed.
-  disk_name     = local.disk2_name                  # Name assigned to the disk.
-  disk_type     = local.disk2_type                  # Type of the disk (e.g., pd-standard).
-  disk_size     = local.disk2_size                  # Size of the disk in GB.
-  backup_policy = module.dp1.snapshot_schedule.name # Backup policy to be associated with the disk.
-  instance_id   = module.vm1.compute_instance.name  # ID of the VM instance to which the disk will be attached.
+  source        = "../../modules/disks"                          # Path to the disks module.
+  project_id    = local.project_id                               # Google Cloud project ID for disk creation.
+  zone          = local.zone                                     # Zone where the disk will be deployed.
+  disk_name     = local.disk2_name                               # Name assigned to the disk.
+  disk_type     = local.disk2_type                               # Type of the disk (e.g., pd-standard).
+  disk_size     = local.disk2_size                               # Size of the disk in GB.
+  backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
+  instance_id   = module.vm1.google_compute_instance.name        # ID of the VM instance to which the disk will be attached.
 
   # Ensures that the disk is created only after the specified modules are provisioned.
   depends_on = [

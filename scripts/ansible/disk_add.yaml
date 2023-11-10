@@ -2,7 +2,6 @@
 # Playbook for setting up storage on a Google Cloud VM
 - name: "Setup disk storage in Google Cloud"
   hosts: all
-  become: yes # Run tasks with administrative privileges
 
   tasks:
     # Find and register the device name for the specified disk

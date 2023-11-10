@@ -35,7 +35,7 @@ resource "google_compute_instance" "default" {
 }
 
 # Resource block for attaching a disk resource policy to a Compute Engine disk.
-resource "google_compute_disk_resource_policy_attachment" "attachment" {
+resource "google_compute_disk_resource_policy_attachment" "default" {
   count   = var.backup_policy != "" ? 1 : 0 # Conditionally creates this resource based on backup policy presence.
   project = var.project_id                  # Google Cloud project ID.
   name    = var.backup_policy               # Name of the backup policy to attach.
