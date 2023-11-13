@@ -9,13 +9,13 @@ This project utilizes Terraform for configuring and deploying a suite of cloud i
 - virtual-machine: Deploys VMs, integrating them with service accounts and backup policies for optimized operation.
 ## Prerequisites and Installation
 - Terraform (version 1.6 or newer)
-```
+``` bash
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update && sudo apt install terraform
 ```
-- Ansible
-```
+- Ansible (version 2.15.6 or newer)
+``` bash
 sudo apt remove ansible
 sudo apt --purge autoremove
 sudo apt update
@@ -29,7 +29,7 @@ sudo apt install ansible
 ### ansible/disk_add
 
 Defines an Ansible module for adding disks, linking it to a specific VM, and setting up associated configurations. It ensures the module is executed only after the necessary VM and disk provisioning.
-```
+``` t
 module "ansible1" {
   source         = "../../modules/ansible"               # Path to the Ansible module.
   path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
@@ -48,7 +48,7 @@ module "ansible1" {
 ### disk-policy
 
 This module creates a disk backup policy, defining various parameters such as project ID, region, policy name, description, and the backup schedule.
-```
+``` t
 # This module block creates a disk backup policy using a specified module.
 module "dp1" {
   source         = "../../modules/disk-policy" # Specifies the relative path to the disk policy module.
@@ -64,7 +64,7 @@ module "dp1" {
 ### disks
 
 Creates a persistent disk in a specified zone, assigning it a name, type, size, and linking it to both a VM instance and a backup policy. Dependencies are managed to ensure correct order of resource creation.
-```
+``` t
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
   source        = "../../modules/disks"                          # Path to the disks module.
@@ -85,7 +85,7 @@ module "disk1" {
 ### service-account
 
 Facilitates the creation of a new service account, providing details like account ID, display name, and the project ID where it will be created.
-```
+``` t
 # This block declares a Terraform module to create a new service account.
 module "sa1" {
   source       = "../../modules/service-account" # Specifies the relative path to the service account module.
@@ -98,7 +98,7 @@ module "sa1" {
 ### virtual-machine
 
 This module block is responsible for creating a VM instance with specified properties such as project ID, name, type, zone, network, and disk size. It also associates the VM with a backup policy and a service account.
-```
+``` t
 # Module block for creating a virtual machine (VM) instance with specified properties.
 module "vm1" {
   source                = "../../modules/virtual-machine"                # Path to the virtual machine module.
@@ -122,7 +122,7 @@ module "vm1" {
 ### env/nop/ansible.cfg
 
 Configures Ansible for SSH connections, privilege escalation, and execution strategy. It's tailored to enable efficient and secure management of cloud resources.
-```
+``` c
 [ssh_connection]
 pipelining = True
 ssh_executable = misc/gssh.sh
@@ -141,7 +141,7 @@ strategy = free
 ### env/nop/misc/gssh.sh
 
 A custom script to enhance Ansible's SSH capabilities, especially for Google Cloud environments. It specifies command execution patterns, SSH connection settings, and integrates with gcloud compute ssh for optimized operations.
-```
+``` bash
 #!/bin/bash
 
 # ansible/ansible/lib/ansible/plugins/connection/ssh.py
