@@ -1,5 +1,8 @@
 # Define local variables for reuse within this Terraform module.
 locals {
+  # Script path
+  ansible_disk_add_path = "../../scripts/ansible/disk_add.yaml"
+
   # Project configuration
   project_id = "prj-obilab-5873628173-mrtf" # Unique identifier for the project.
   region     = "europe-west6"               # Region where resources will be provisioned.
@@ -24,8 +27,12 @@ locals {
   vm1_disk_size    = 10                                            # Size of the VM's primary disk in GB.
 
   # Additional disk configurations for attachable storage.
-  disk1_name     = "disk-1"      # Identifier for the first additional disk.
-  disk1_type     = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk1_size     = 10            # Size of the disk in GB.
-  disk1_mnt_name = "group"
+  disk1_name = "migration"   # Identifier for the first additional disk.
+  disk1_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
+  disk1_size = 10            # Size of the disk in GB.
+
+  # Additional disk configurations for attachable storage.
+  disk2_name = "additional"  # Identifier for the first additional disk.
+  disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
+  disk2_size = 10            # Size of the disk in GB.
 }

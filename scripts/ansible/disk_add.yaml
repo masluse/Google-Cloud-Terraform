@@ -35,12 +35,6 @@
         dev: "/dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
         opts: "-L {{ mnt_name }}"
 
-    # Create a directory for the mount point
-    - name: "Create mount point"
-      ansible.builtin.file:
-        path: "/mnt/{{ mnt_name }}"
-        state: directory
-
     # Add filesystem to fstab and mount it
     - name: "Add filesystem to fstab and mount"
       ansible.posix.mount:
@@ -49,3 +43,10 @@
         fstype: xfs
         opts: defaults
         state: mounted
+
+    # Ensure correct permissions are set for the mount point
+    - name: "Set correct permissions for the mount point"
+      ansible.builtin.file:
+        path: "/mnt/{{ mnt_name }}"
+        state: directory
+        mode: '0766'

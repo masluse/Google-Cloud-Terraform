@@ -1,6 +1,6 @@
 # This block declares a Terraform module to create a new service account.
 module "sa1" {
-  source       = "../../modules/service-account" # Specifies the relative path to the service account module.
+  source       = "../../modules/service_account"  # Specifies the relative path to the service account module.
   account_id   = local.sa1_account_id            # Sets the service account ID using a value from local variables.
   display_name = local.sa1_display_name          # Assigns a human-readable name to the service account.
   project_id   = local.project_id                # Defines the Google Cloud project ID where the service account will be created.
@@ -8,7 +8,7 @@ module "sa1" {
 
 # This module block creates a disk backup policy using a specified module.
 module "dp1" {
-  source         = "../../modules/disk-policy" # Specifies the relative path to the disk policy module.
+  source         = "../../modules/disk_policy" # Specifies the relative path to the disk policy module.
   project_id     = local.project_id            # Sets the Google Cloud project ID where the policy will be applied.
   region         = local.region                # Defines the region for applying the disk policy.
   name           = local.dp1_name              # Assigns a name to the backup policy.
@@ -20,7 +20,7 @@ module "dp1" {
 
 # Module block for creating a virtual machine (VM) instance with specified properties.
 module "vm1" {
-  source                = "../../modules/virtual-machine"                # Path to the virtual machine module.
+  source                = "../../modules/virtual_machine"               # Path to the virtual machine module.
   project_id            = local.project_id                               # ID of the Google Cloud project where the VM is created.
   name                  = local.vm1_name                                 # Name assigned to the VM instance.
   type                  = local.vm1_type                                 # Machine type for the VM, defining CPU and memory.
@@ -39,7 +39,7 @@ module "vm1" {
 
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
-  source        = "../../modules/disks"                          # Path to the disks module.
+  source        = "../../modules/disk"                         # Path to the disks module.
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk1_name                               # Name assigned to the disk.
@@ -54,20 +54,53 @@ module "disk1" {
   ]
 }
 
+# Module block for creating a persistent disk with specified properties using the 'disks' module.
+module "disk2" {
+  source        = "../../modules/disk"                          # Path to the disks module.
+  project_id    = local.project_id                               # Google Cloud project ID for disk creation.
+  zone          = local.zone                                     # Zone where the disk will be deployed.
+  disk_name     = local.disk2_name                               # Name assigned to the disk.
+  disk_type     = local.disk2_type                               # Type of the disk (e.g., pd-standard).
+  disk_size     = local.disk2_size                               # Size of the disk in GB.
+  backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
+  instance_id   = module.vm1.google_compute_instance.name        # ID of the VM instance to which the disk will be attached.
+
+  # Ensures that the disk is created only after the specified modules are provisioned.
+  depends_on = [
+    module.vm1, module.dp1
+  ]
+}
+
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
-  source         = "../../modules/ansible"               # Path to the Ansible module.
-  path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
-  vm_name      = local.vm1_name                        # Public IP of the provisioned VM.
+  source         = "../../modules/ansible"            # Path to the Ansible module.
+  path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
+  vm_name        = local.vm1_name                        # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
     disk_name = local.disk1_name,
-    mnt_name  = local.disk1_mnt_name
+    mnt_name  = local.disk1_name
   }
 
   # Ensures that Ansible is executed only after VM and disk provisioning.
   depends_on = [module.vm1, module.disk1]
+}
+
+# Module block to run Ansible playbooks for configuration management on a provisioned VM.
+module "ansible2" {
+  source         = "../../modules/ansible"             # Path to the Ansible module.
+  path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
+  vm_name        = local.vm1_name                        # Public IP of the provisioned VM.
+  vm_zone        = module.vm1.google_compute_instance.zone
+  # Additional variables for Ansible.
+  ansible_extra_vars = {
+    disk_name = local.disk2_name,
+    mnt_name  = local.disk2_name
+  }
+
+  # Ensures that Ansible is executed only after VM and disk provisioning.
+  depends_on = [module.vm1, module.disk2]
 }
 
 output "gcloud-connect" {
