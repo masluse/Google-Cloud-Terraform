@@ -7,10 +7,24 @@ This project utilizes Terraform for configuring and deploying a suite of cloud i
 - disks: Manages the creation and association of persistent disks with VMs and snapshot policies.
 - service-account: Sets up service accounts for secure, scoped access to cloud resources.
 - virtual-machine: Deploys VMs, integrating them with service accounts and backup policies for optimized operation.
-## Prerequisites
+## Prerequisites and Installation
 - Terraform (version 1.6 or newer)
+```
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+```
+- Ansible
+```
+sudo apt remove ansible
+sudo apt --purge autoremove
+sudo apt update
+sudo apt upgrade
+sudo apt -y install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt install ansible
+```
 - Google Cloud access credentials (via cloud provider CLI)
-- An initialized Google Cloud project where resources will be deployed
 ## Module Usage
 ### ansible/disk_add
 
