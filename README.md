@@ -15,16 +15,62 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install terraform
 ```
 - Ansible (version 2.15.6 or newer)
+Remove old Ansible version
 ``` bash
 sudo apt remove ansible
 sudo apt --purge autoremove
+```
+Update and upgrade Rep
+``` bash
 sudo apt update
 sudo apt upgrade
+```
+Configure Personal Package Archives to the latest version
+``` bash
 sudo apt -y install software-properties-common
 sudo apt-add-repository ppa:ansible/ansible
+```
+Installing Ansible
+``` bash
 sudo apt install ansible
 ```
 - Google Cloud access credentials (via cloud provider CLI)
+## Files (Tree)
+``` 
+.
+├── env
+│   └── nop
+│       ├── ansible.cfg
+│       ├── locals.tf
+│       ├── main.tf
+│       ├── misc
+│       │   └── gssh.sh
+│       └── moduls.tf
+├── modules
+│   ├── ansible
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   ├── disk-policy
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── disks
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variable.tf
+│   ├── service-account
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── virtual-machine
+│       ├── main.tf
+│       ├── outputs.tf
+│       └── variables.tf
+├── README.md
+└── scripts
+    └── ansible
+        └── disk_add.yaml
+```
 ## Module Usage
 ### ansible/disk_add
 
@@ -33,12 +79,12 @@ Defines an Ansible module for adding disks, linking it to a specific VM, and set
 module "ansible1" {
   source         = "../../modules/ansible"               # Path to the Ansible module.
   path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
-  public_ip      = local.vm1_name                        # Public IP of the provisioned VM.
-
+  vm_name      = local.vm1_name                        # Public IP of the provisioned VM.
+  vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
     disk_name = local.disk1_name,
-    mnt_name  = local.mnt_name1
+    mnt_name  = local.disk1_mnt_name
   }
 
   # Ensures that Ansible is executed only after VM and disk provisioning.

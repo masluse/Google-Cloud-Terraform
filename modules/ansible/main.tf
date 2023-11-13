@@ -10,7 +10,7 @@ resource "null_resource" "ansible_provisioner" {
     environment = {
       GCLOUD_ARGS = var.vm_zone
     }
-    command = "ansible-playbook -i ${var.public_ip}, ${local.ansible_extra_vars_command} ${var.path_to_script}"
+    command = "ansible-playbook -i ${var.vm_name}, ${local.ansible_extra_vars_command} ${var.path_to_script}"
     # Command to run the Ansible playbook with dynamic IP, extra variables, and playbook path.
   }
 

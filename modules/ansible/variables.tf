@@ -3,7 +3,7 @@ variable "path_to_script" {
   description = "The file path to the Ansible playbook"
 }
 
-variable "public_ip" {
+variable "vm_name" {
   type        = string
   description = "The public IP address of the target machine for Ansible"
 }

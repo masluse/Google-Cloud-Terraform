@@ -58,7 +58,7 @@ module "disk1" {
 module "ansible1" {
   source         = "../../modules/ansible"               # Path to the Ansible module.
   path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
-  public_ip      = local.vm1_name                        # Public IP of the provisioned VM.
+  vm_name      = local.vm1_name                        # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
