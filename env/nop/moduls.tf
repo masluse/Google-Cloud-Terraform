@@ -1,6 +1,6 @@
 # This block declares a Terraform module to create a new service account.
 module "sa1" {
-  source       = "../../modules/service_account"  # Specifies the relative path to the service account module.
+  source       = "../../modules/service_account" # Specifies the relative path to the service account module.
   account_id   = local.sa1_account_id            # Sets the service account ID using a value from local variables.
   display_name = local.sa1_display_name          # Assigns a human-readable name to the service account.
   project_id   = local.project_id                # Defines the Google Cloud project ID where the service account will be created.
@@ -20,7 +20,7 @@ module "dp1" {
 
 # Module block for creating a virtual machine (VM) instance with specified properties.
 module "vm1" {
-  source                = "../../modules/virtual_machine"               # Path to the virtual machine module.
+  source                = "../../modules/virtual_machine"                # Path to the virtual machine module.
   project_id            = local.project_id                               # ID of the Google Cloud project where the VM is created.
   name                  = local.vm1_name                                 # Name assigned to the VM instance.
   type                  = local.vm1_type                                 # Machine type for the VM, defining CPU and memory.
@@ -39,7 +39,7 @@ module "vm1" {
 
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
-  source        = "../../modules/disk"                         # Path to the disks module.
+  source        = "../../modules/disk"                           # Path to the disks module.
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk1_name                               # Name assigned to the disk.
@@ -56,7 +56,7 @@ module "disk1" {
 
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk2" {
-  source        = "../../modules/disk"                          # Path to the disks module.
+  source        = "../../modules/disk"                           # Path to the disks module.
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk2_name                               # Name assigned to the disk.
@@ -73,9 +73,9 @@ module "disk2" {
 
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
-  source         = "../../modules/ansible"            # Path to the Ansible module.
+  source         = "../../modules/ansible"     # Path to the Ansible module.
   path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
-  vm_name        = local.vm1_name                        # Public IP of the provisioned VM.
+  vm_name        = local.vm1_name              # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
@@ -89,9 +89,9 @@ module "ansible1" {
 
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible2" {
-  source         = "../../modules/ansible"             # Path to the Ansible module.
+  source         = "../../modules/ansible"     # Path to the Ansible module.
   path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
-  vm_name        = local.vm1_name                        # Public IP of the provisioned VM.
+  vm_name        = local.vm1_name              # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
   # Additional variables for Ansible.
   ansible_extra_vars = {
