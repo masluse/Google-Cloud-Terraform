@@ -164,6 +164,7 @@ module "vm1" {
   ]
 }
 ```
+
 ## Configuring Ansible for gcloud SSH
 ### env/nop/ansible.cfg
 

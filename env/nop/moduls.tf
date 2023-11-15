@@ -90,14 +90,9 @@ module "ansible1" {
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible2" {
   source         = "../../modules/ansible"     # Path to the Ansible module.
-  path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
+  path_to_script = local.ansible_swap_disk_path # Path to the Ansible playbook.
   vm_name        = local.vm1_name              # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
-  # Additional variables for Ansible.
-  ansible_extra_vars = {
-    disk_name = local.disk2_name,
-    mnt_name  = local.disk2_name
-  }
 
   # Ensures that Ansible is executed only after VM and disk provisioning.
   depends_on = [module.vm1, module.disk2]

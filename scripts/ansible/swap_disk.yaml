@@ -1,0 +1,25 @@
+# Ansible yaml file to enable a swap disk. The disk must be called google-swap.
+---
+- name: "Setup swap"
+  hosts: all
+  # remote_user: ansible
+  # become: true # Benötigt Administratorenrechte
+
+  tasks:
+    # - name: check if swap disk exists
+    #   stat: 
+    #     path: /dev/vg_swap/lv_swap
+    #   register: swap_disk_check
+    #   ignore_errors: yes
+
+    - name: create new LVM volume group
+      lvg: vg=vg_swap pvs=/dev/disk/by-id/google-swap state=present
+
+    - name: creating new LVM logical volume
+      lvol: vg=vg_swap lv=lv_swap size=100%FREE
+
+    - name: Format swap device
+      command: /usr/sbin/mkswap /dev/vg_swap/lv_swap
+
+    - name: activate swap device
+      command : /usr/sbin/swapon /dev/vg_swap/lv_swap

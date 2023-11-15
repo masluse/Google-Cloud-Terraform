@@ -1,0 +1,32 @@
+---
+- name: Automatisierung der Diskvergrößerung
+  hosts: all
+  tasks:
+    # Find and register the device name for the specified disk
+    - name: "Find the device name for the given disk"
+      shell: "readlink -f /dev/disk/by-id/google-*{{ disk_name }}"
+      register: google_disk_link
+      changed_when: false
+
+    # Set a variable with the device name
+    - name: "Set the device name variable"
+      set_fact:
+        device_name: "{{ google_disk_link.stdout }}"
+
+    - name: Disks neu scannen
+      shell: |
+        rescan-scsi-bus.sh -a
+        rescan-scsi-bus.sh -s
+
+    - name: Ermittle das Physical Volume
+      command: pvdisplay -c
+      register: pv_display
+
+    - name: Physisches Volume vergrößern
+      command: pvresize {{ device_name }}
+
+    - name: Logical Volume vergrößern
+      command: lvextend -l +100%FREE /dev/vg_{{ disk_name }}/lv_{{ disk_name }}
+
+    - name: Filesystem vergrößern
+      command: xfs_growfs -d /dev/vg_{{ disk_name }}/lv_{{ disk_name }}

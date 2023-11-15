@@ -2,6 +2,7 @@
 locals {
   # Script path
   ansible_disk_add_path = "../../scripts/ansible/disk_add.yaml"
+  ansible_swap_disk_path = "../../scripts/ansible/swap_disk.yaml"
 
   # Project configuration
   project_id = "prj-obilab-5873628173-mrtf" # Unique identifier for the project.
@@ -32,7 +33,7 @@ locals {
   disk1_size = 10            # Size of the disk in GB.
 
   # Additional disk configurations for attachable storage.
-  disk2_name = "additional"  # Identifier for the first additional disk.
+  disk2_name = "swap"  # Identifier for the first additional disk.
   disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk2_size = 10            # Size of the disk in GB.
 }
