@@ -1,52 +1,77 @@
 ---
-# Playbook for setting up storage on a Google Cloud VM
 - name: "Setup disk storage in Google Cloud"
   hosts: all
-
   tasks:
-    # Find and register the device name for the specified disk
     - name: "Find the device name for the given disk"
       shell: "readlink -f /dev/disk/by-id/google-*{{ disk_name }}"
       register: google_disk_link
       changed_when: false
 
-    # Set a variable with the device name
     - name: "Set the device name variable"
       set_fact:
         device_name: "{{ google_disk_link.stdout }}"
 
-    # Create a physical volume on the Google Cloud Disk
-    - name: "Create a physical volume on Google Cloud Disk"
-      community.general.lvg:
-        pvs: "{{ device_name }}"
-        vg: "vg_{{ mnt_name }}"
+    - name: "Check if the device is already a PV"
+      shell: "pvs | grep '{{ device_name }}' | awk '{print $2}' |  awk -F'vg_' '{print $2}'"
+      register: existing
+      ignore_errors: true
 
-    # Create a logical volume using all available space
-    - name: "Create a logical volume with all available space"
-      community.general.lvol:
-        vg: "vg_{{ mnt_name }}"
-        lv: "lv_{{ mnt_name }}"
-        size: 100%FREE
+    - name: "Check if the device is already a PV"
+      shell: "df -h | grep '/mnt/{{ existing.stdout }}' | awk '{print $6}'"
+      register: mount
+      ignore_errors: true
 
-    # Create a filesystem on the logical volume
-    - name: "Create a filesystem on the logical volume"
-      community.general.filesystem:
-        fstype: xfs
-        dev: "/dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
-        opts: "-L {{ mnt_name }}"
+    - name: "f"
+      block:
+        - name: "Unmount filesystem if in use"
+          ansible.builtin.command:
+            cmd: "umount /mnt/{{ existing.stdout }}"
 
-    # Add filesystem to fstab and mount it
-    - name: "Add filesystem to fstab and mount"
-      ansible.posix.mount:
-        path: "/mnt/{{ mnt_name }}"
-        src: "LABEL={{ mnt_name }}"
-        fstype: xfs
-        opts: defaults
-        state: mounted
+        - name: "remove folder"
+          ansible.builtin.command:
+            cmd: "rm -rf /mnt/{{ existing.stdout }}"
 
-    # Ensure correct permissions are set for the mount point
+        - name: "Remove existing Logical Volumes"
+          ansible.builtin.command:
+            cmd: "lvremove -f /dev/vg_{{ existing.stdout }}/lv_{{ existing.stdout }}"
+
+        - name: "Remove existing Volume Group"
+          ansible.builtin.command:
+            cmd: "vgremove -f vg_{{ existing.stdout }}"
+      when: existing.stdout != '' and existing.stdout != mnt_name
+
+    - name: "f"
+      block:
+
+        - name: "Create a physical volume on Google Cloud Disk"
+          ansible.builtin.command:
+            cmd: "pvcreate -ff -y {{ device_name }}"
+
+        - name: "Create a volume group on the physical volume"
+          ansible.builtin.command:
+            cmd: "vgcreate vg_{{ mnt_name }} {{ device_name }}"
+
+        - name: "Create a logical volume with all available space"
+          ansible.builtin.command:
+            cmd: "lvcreate -l 100%FREE -n lv_{{ mnt_name }} vg_{{ mnt_name }}"
+
+        - name: "Create a filesystem on the logical volume"
+          ansible.builtin.command:
+            cmd: "mkfs -t xfs /dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
+
+        - name: "Add filesystem to fstab and mount"
+          ansible.posix.mount:
+            path: "/mnt/{{ mnt_name }}"
+            src: "/dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
+            fstype: xfs
+            opts: defaults
+            state: mounted
+      when: existing.stdout != mnt_name
+
     - name: "Set correct permissions for the mount point"
       ansible.builtin.file:
         path: "/mnt/{{ mnt_name }}"
-        state: directory
-        mode: '0766'
+        mode: '{{ permissions }}'
+        owner: '{{ owner }}'
+        group: '{{ group }}'
+        recurse: yes

@@ -25,7 +25,7 @@ resource "google_compute_disk_resource_policy_attachment" "default" {
 resource "google_compute_attached_disk" "default" {
   count    = var.instance_id != "" ? 1 : 0  # Conditionally creates this resource if an instance ID is specified.
   project  = var.project_id                 # Google Cloud project ID.
-  device_name = var.disk_name
+  device_name = var.device_name
   zone     = var.zone                       # Zone where the instance and disk are located.
   disk     = google_compute_disk.default.id # ID of the disk to attach.
   instance = var.instance_id                # ID of the instance to which the disk will be attached.

@@ -8,6 +8,11 @@ variable "disk_name" {
   description = "Name of disk"
 }
 
+variable "device_name" {
+  type        = string
+  description = "Name of disk"
+}
+
 variable "disk_type" {
   type        = string
   description = "Type of the disk"

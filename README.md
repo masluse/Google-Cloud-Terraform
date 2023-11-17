@@ -50,45 +50,53 @@ sudo apt install ansible
 │   ├── ansible
 │   │   ├── main.tf
 │   │   └── variables.tf
-│   ├── disk-policy
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   ├── disks
+│   ├── disk
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variable.tf
-│   ├── service-account
+│   ├── disk_policy
 │   │   ├── main.tf
 │   │   ├── outputs.tf
 │   │   └── variables.tf
-│   └── virtual-machine
+│   ├── service_account
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── virtual_machine
 │       ├── main.tf
 │       ├── outputs.tf
 │       └── variables.tf
 ├── README.md
 └── scripts
-    └── ansible
-        └── disk_add.yaml
+    ├── ansible
+    │   ├── disk_add.yaml
+    │   ├── disk_resize.yaml
+    │   └── swap_disk.yaml
+    └── gcloud_automation
+        ├── ansible.cfg
+        ├── disk_resize.sh
+        └── misc
+            └── gssh.sh
 ```
 ## Module Usage
 ### ansible/disk_add
 
 Defines an Ansible module for adding disks, linking it to a specific VM, and setting up associated configurations. It ensures the module is executed only after the necessary VM and disk provisioning.
 ``` t
+# Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
-  source         = "../../modules/ansible"               # Path to the Ansible module.
-  path_to_script = "../../scripts/ansible/disk_add.yaml" # Path to the Ansible playbook.
-  vm_name      = local.vm1_name                        # Public IP of the provisioned VM.
-  vm_zone        = module.vm1.google_compute_instance.zone
-  # Additional variables for Ansible.
+  source            = "../../modules/ansible"
+  path_to_script    = local.ansible_disk_add_path
+  vm_name           = local.vm1_name
+  vm_zone           = module.vm1.google_compute_instance.zone
   ansible_extra_vars = {
-    disk_name = local.disk1_name,
-    mnt_name  = local.disk1_mnt_name
+    disk_name    = local.disk1_mnt_name,
+    mnt_name     = local.disk1_mnt_name,
+    permissions  = local.disk1_permissions
+    owner = local.disk1_owner
+    group = local.disk1_group
   }
-
-  # Ensures that Ansible is executed only after VM and disk provisioning.
-  depends_on = [module.vm1, module.disk1]
+  depends_on        = [module.vm1, module.disk1]
 }
 ```
 ### disk-policy
@@ -113,10 +121,11 @@ Creates a persistent disk in a specified zone, assigning it a name, type, size, 
 ``` t
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
-  source        = "../../modules/disks"                          # Path to the disks module.
+  source        = "../../modules/disk"                           # Path to the disks module.
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk1_name                               # Name assigned to the disk.
+  device_name = local.disk1_mnt_name
   disk_type     = local.disk1_type                               # Type of the disk (e.g., pd-standard).
   disk_size     = local.disk1_size                               # Size of the disk in GB.
   backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.

@@ -28,12 +28,17 @@ locals {
   vm1_disk_size    = 10                                            # Size of the VM's primary disk in GB.
 
   # Additional disk configurations for attachable storage.
-  disk1_name = "migration"   # Identifier for the first additional disk.
+  disk1_name = "google-migration"   # Identifier for the first additional disk.
+  disk1_mnt_name = "migrations"   # Identifier for the first additional disk.
   disk1_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk1_size = 10            # Size of the disk in GB.
+  disk1_permissions = "0777"
+  disk1_owner = "root"
+  disk1_group = "root"
 
   # Additional disk configurations for attachable storage.
-  disk2_name = "swap"  # Identifier for the first additional disk.
+  disk2_name = "google-swap"  # Identifier for the first additional disk.
+  disk2_mnt_name = "swap"
   disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk2_size = 10            # Size of the disk in GB.
 }

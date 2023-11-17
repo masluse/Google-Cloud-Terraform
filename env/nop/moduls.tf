@@ -43,6 +43,7 @@ module "disk1" {
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk1_name                               # Name assigned to the disk.
+  device_name = local.disk1_mnt_name
   disk_type     = local.disk1_type                               # Type of the disk (e.g., pd-standard).
   disk_size     = local.disk1_size                               # Size of the disk in GB.
   backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
@@ -60,6 +61,7 @@ module "disk2" {
   project_id    = local.project_id                               # Google Cloud project ID for disk creation.
   zone          = local.zone                                     # Zone where the disk will be deployed.
   disk_name     = local.disk2_name                               # Name assigned to the disk.
+  device_name = local.disk2_mnt_name
   disk_type     = local.disk2_type                               # Type of the disk (e.g., pd-standard).
   disk_size     = local.disk2_size                               # Size of the disk in GB.
   backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
@@ -73,19 +75,20 @@ module "disk2" {
 
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
-  source         = "../../modules/ansible"     # Path to the Ansible module.
-  path_to_script = local.ansible_disk_add_path # Path to the Ansible playbook.
-  vm_name        = local.vm1_name              # Public IP of the provisioned VM.
-  vm_zone        = module.vm1.google_compute_instance.zone
-  # Additional variables for Ansible.
+  source            = "../../modules/ansible"
+  path_to_script    = local.ansible_disk_add_path
+  vm_name           = local.vm1_name
+  vm_zone           = module.vm1.google_compute_instance.zone
   ansible_extra_vars = {
-    disk_name = local.disk1_name,
-    mnt_name  = local.disk1_name
+    disk_name    = local.disk1_mnt_name,
+    mnt_name     = local.disk1_mnt_name,
+    permissions  = local.disk1_permissions
+    owner = local.disk1_owner
+    group = local.disk1_group
   }
-
-  # Ensures that Ansible is executed only after VM and disk provisioning.
-  depends_on = [module.vm1, module.disk1]
+  depends_on        = [module.vm1, module.disk1]
 }
+
 
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible2" {

@@ -32,6 +32,12 @@ resource "google_compute_instance" "default" {
   tags = ["ubuntu-vm", "iac-ssh"]
 
   project = var.project_id # Google Cloud project ID where the VM is located.
+
+  lifecycle {
+    ignore_changes = [
+      attached_disk, 
+    ]
+  }
 }
 
 # Resource block for attaching a disk resource policy to a Compute Engine disk.
