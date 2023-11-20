@@ -96,7 +96,7 @@ module "disk2" {
 module "ansible1" {
   source            = "../../modules/ansible"
   path_to_script    = local.ansible_disk_add_path
-  vm_name           = [ local.vm1_name, local.vm2_name ]
+  vm_name           = local.ansible
   vm_zone           = module.vm1.google_compute_instance.zone
   ansible_extra_vars = {
     disk_name    = local.disk1_mnt_name,
@@ -113,7 +113,7 @@ module "ansible1" {
 module "ansible2" {
   source         = "../../modules/ansible"     # Path to the Ansible module.
   path_to_script = local.ansible_swap_disk_path # Path to the Ansible playbook.
-  vm_name        = local.vm1_name              # Public IP of the provisioned VM.
+  vm_name        = local.vm1_name             # Public IP of the provisioned VM.
   vm_zone        = module.vm1.google_compute_instance.zone
 
   # Ensures that Ansible is executed only after VM and disk provisioning.

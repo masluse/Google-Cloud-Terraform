@@ -48,4 +48,6 @@ locals {
   disk2_mnt_name = "swap"
   disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk2_size = 10            # Size of the disk in GB.
+
+  ansible = "${local.vm1_name},${local.vm2_name}"
 }

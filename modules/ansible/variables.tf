@@ -4,7 +4,7 @@ variable "path_to_script" {
 }
 
 variable "vm_name" {
-  type        = list
+  type        = string
   description = "The public IP address of the target machine for Ansible"
 }
 
