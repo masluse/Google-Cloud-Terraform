@@ -21,7 +21,7 @@
       register: mount
       ignore_errors: true
 
-    - name: "f"
+    - name: "Do if mnt_name has changed"
       block:
         - name: "Unmount filesystem if in use"
           ansible.builtin.command:
@@ -40,9 +40,8 @@
             cmd: "vgremove -f vg_{{ existing.stdout }}"
       when: existing.stdout != '' and existing.stdout != mnt_name
 
-    - name: "f"
+    - name: "Do if the mnt_name isn't existing already"
       block:
-
         - name: "Create a physical volume on Google Cloud Disk"
           ansible.builtin.command:
             cmd: "pvcreate -ff -y {{ device_name }}"
