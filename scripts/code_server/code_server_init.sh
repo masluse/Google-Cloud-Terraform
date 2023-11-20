@@ -14,15 +14,10 @@ sudo apt update
 sudo apt install ansible -y
 
 # Install gcloud
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates gnupg curl sudo
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-
-# Import the Google Cloud public key
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-
-# Update and install gcloud CLI
-sudo apt-get update && sudo apt-get install google-cloud-cli -y
+cd /tmp
+curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-455.0.0-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-455.0.0-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh
 
 # Initialize gcloud (optional)
 # gcloud init

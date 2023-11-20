@@ -37,6 +37,25 @@ module "vm1" {
   ]
 }
 
+# Module block for creating a virtual machine (VM) instance with specified properties.
+module "vm2" {
+  source                = "../../modules/virtual_machine"                # Path to the virtual machine module.
+  project_id            = local.project_id                               # ID of the Google Cloud project where the VM is created.
+  name                  = local.vm2_name                                 # Name assigned to the VM instance.
+  type                  = local.vm2_type                                 # Machine type for the VM, defining CPU and memory.
+  zone                  = local.zone                                     # Zone where the VM will be deployed.
+  network_name          = local.vm2_network_name                         # Network to which the VM will be connected.
+  disk_size             = local.vm2_disk_size                            # Size of the VM's boot disk.
+  image                 = local.vm2_image                                # Boot image used for the VM.
+  backup_policy         = module.dp1.google_compute_resource_policy.name # Backup policy associated with the VM.
+  service_account_email = module.sa1.google_service_account.email        # Service account email associated with the VM.
+
+  # Ensures that the VM is created only after the specified modules are successfully provisioned.
+  depends_on = [
+    module.dp1, module.sa1
+  ]
+}
+
 # Module block for creating a persistent disk with specified properties using the 'disks' module.
 module "disk1" {
   source        = "../../modules/disk"                           # Path to the disks module.
@@ -77,7 +96,7 @@ module "disk2" {
 module "ansible1" {
   source            = "../../modules/ansible"
   path_to_script    = local.ansible_disk_add_path
-  vm_name           = local.vm1_name
+  vm_name           = [ local.vm1_name, local.vm2_name ]
   vm_zone           = module.vm1.google_compute_instance.zone
   ansible_extra_vars = {
     disk_name    = local.disk1_mnt_name,

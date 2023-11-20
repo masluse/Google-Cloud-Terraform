@@ -27,6 +27,13 @@ locals {
   vm1_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
   vm1_disk_size    = 10                                            # Size of the VM's primary disk in GB.
 
+  # VM (Virtual Machine) configuration to specify the compute resources.
+  vm2_name         = "vm-2"                                        # Name identifier for the virtual machine.
+  vm2_type         = "e2-micro"                                    # Machine type specifying a particular CPU/RAM configuration.
+  vm2_network_name = "default"                                     # The network to which the VM is connected.
+  vm2_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
+  vm2_disk_size    = 10   
+
   # Additional disk configurations for attachable storage.
   disk1_name = "google-migration"   # Identifier for the first additional disk.
   disk1_mnt_name = "migrations"   # Identifier for the first additional disk.
