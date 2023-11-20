@@ -1,0 +1,30 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "install": [
+      "apt-transport-https",
+      "ca-certificates",
+      "gnupg",
+      "curl",
+      "software-properties-common"
+    ],
+    "postCreateCommand": "sudo apt update && sudo apt upgrade -y",
+    "postCreateCommand": "sudo apt-add-repository ppa:ansible/ansible -y",
+    "postCreateCommand": "sudo apt update",
+    "runArgs": ["--privileged"],
+    "extensions": [
+      "4ops.terraform",
+      "hashicorp.terraform",
+      "redhat.ansible",
+      "github.copilot"
+    ]
+  },
+  "runArgs": ["--cap-add=SYS_ADMIN", "--cap-add=SYS_PTRACE", "--security-opt", "apparmor=unconfined"],
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+  ],
+  "remoteUser": "vscode",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  }
+}
