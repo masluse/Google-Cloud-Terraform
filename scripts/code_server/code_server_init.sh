@@ -13,12 +13,6 @@ sudo apt-add-repository ppa:ansible/ansible -y
 sudo apt update
 sudo apt install ansible -y
 
-# Install gcloud
-cd /tmp
-curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-455.0.0-linux-x86_64.tar.gz
-tar -xf google-cloud-cli-455.0.0-linux-x86_64.tar.gz
-./google-cloud-sdk/install.sh
-
 # Initialize gcloud (optional)
 # gcloud init
 
