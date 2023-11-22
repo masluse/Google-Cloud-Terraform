@@ -92,6 +92,24 @@ module "disk2" {
   ]
 }
 
+# Module block for creating a persistent disk with specified properties using the 'disks' module.
+module "disk3" {
+  source        = "../../modules/disk"                           # Path to the disks module.
+  project_id    = local.project_id                               # Google Cloud project ID for disk creation.
+  zone          = local.zone                                     # Zone where the disk will be deployed.
+  disk_name     = local.disk3_name                               # Name assigned to the disk.
+  device_name = local.disk3_mnt_name
+  disk_type     = local.disk3_type                               # Type of the disk (e.g., pd-standard).
+  disk_size     = local.disk3_size                               # Size of the disk in GB.
+  backup_policy = module.dp1.google_compute_resource_policy.name # Backup policy to be associated with the disk.
+  instance_id   = module.vm2.google_compute_instance.name        # ID of the VM instance to which the disk will be attached.
+
+  # Ensures that the disk is created only after the specified modules are provisioned.
+  depends_on = [
+    module.vm1, module.dp1
+  ]
+}
+
 # Module block to run Ansible playbooks for configuration management on a provisioned VM.
 module "ansible1" {
   source            = "../../modules/ansible"
@@ -101,9 +119,9 @@ module "ansible1" {
   ansible_extra_vars = {
     disk_name    = local.disk1_mnt_name,
     mnt_name     = local.disk1_mnt_name,
-    permissions  = local.disk1_permissions
-    owner = local.disk1_owner
-    group = local.disk1_group
+    permissions  = local.disk_migration_permissions
+    owner = local.disk_migration_owner
+    group = local.disk_migration_group
   }
   depends_on        = [module.vm1, module.disk1]
 }

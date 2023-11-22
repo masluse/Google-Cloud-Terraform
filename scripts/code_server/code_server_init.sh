@@ -22,6 +22,8 @@ curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-
 tar -xf google-cloud-cli-455.0.0-linux-x86_64.tar.gz
 ./google-cloud-sdk/install.sh
 ./google-cloud-sdk/bin/gcloud init
+./google-cloud-sdk/bin/gcloud auth application-default login
+
 
 # Install Extensions on the code server
 code --install-extension 4ops.terraform

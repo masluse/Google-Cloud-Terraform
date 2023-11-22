@@ -35,19 +35,24 @@ locals {
   vm2_disk_size    = 10   
 
   # Additional disk configurations for attachable storage.
-  disk1_name = "google-migration"   # Identifier for the first additional disk.
+  disk1_name = "google-vm1-migration"   # Identifier for the first additional disk.
   disk1_mnt_name = "migrations"   # Identifier for the first additional disk.
   disk1_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk1_size = 10            # Size of the disk in GB.
-  disk1_permissions = "0777"
-  disk1_owner = "root"
-  disk1_group = "root"
+  disk_migration_permissions = "0777"
+  disk_migration_owner = "root"
+  disk_migration_group = "root"
 
   # Additional disk configurations for attachable storage.
   disk2_name = "google-swap"  # Identifier for the first additional disk.
   disk2_mnt_name = "swap"
   disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
   disk2_size = 10            # Size of the disk in GB.
+
+  disk3_name = "google-vm2-migration"  # Identifier for the first additional disk.
+  disk3_mnt_name = "migrations"
+  disk3_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
+  disk3_size = 10            # Size of the disk in GB.
 
   ansible = "${local.vm1_name},${local.vm2_name}"
 }
