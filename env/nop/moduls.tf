@@ -138,7 +138,12 @@ module "ansible2" {
   depends_on = [module.vm1, module.disk2]
 }
 
-output "gcloud-connect" {
+output "gcloud-connect-vm1" {
   description = "The public ip address of the server"
   value       = "gcloud compute ssh ${local.vm1_name}"
+}
+
+output "gcloud-connect-vm2" {
+  description = "The public ip address of the server"
+  value       = "gcloud compute ssh ${local.vm2_name}"
 }
