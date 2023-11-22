@@ -10,49 +10,29 @@ locals {
   zone       = "europe-west6-a"             # Specific zone within the region.
 
   # Service Account configuration for secure API management.
-  sa1_account_id   = "sa-manuel-manuel02"   # ID for the service account.
-  sa1_display_name = "Test Service Account" # User-friendly name for the service account.
+  sa_account_id   = "sa-manuel-manuel02"   # ID for the service account.
+  sa_display_name = "Test Service Account" # User-friendly name for the service account.
 
   # Backup policy settings to define snapshot schedule and retention.
-  dp1_name           = "nightly-snapshots"                      # Name for the snapshot policy.
-  dp1_description    = "Nightly snapshots retained for 10 days" # Description of backup policy.
-  dp1_start_time     = "02:00"                                  # Time when the snapshot process starts.
-  dp1_retention_days = "10"                                     # Number of days to retain the snapshots.
-  dp1_days_in_cycle  = "1"                                      # Frequency of the snapshot cycle in days.
+  dp_name           = "nightly-snapshots"                      # Name for the snapshot policy.
+  dp_description    = "Nightly snapshots retained for 10 days" # Description of backup policy.
+  dp_start_time     = "02:00"                                  # Time when the snapshot process starts.
+  dp_retention_days = "10"                                     # Number of days to retain the snapshots.
+  dp_days_in_cycle  = "1"                                      # Frequency of the snapshot cycle in days.
 
   # VM (Virtual Machine) configuration to specify the compute resources.
-  vm1_name         = "vm-1"                                        # Name identifier for the virtual machine.
-  vm1_type         = "e2-micro"                                    # Machine type specifying a particular CPU/RAM configuration.
-  vm1_network_name = "default"                                     # The network to which the VM is connected.
-  vm1_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
-  vm1_disk_size    = 10                                            # Size of the VM's primary disk in GB.
+  vm_name         = ["vm-1", "vm-2"]                                        # Name identifier for the virtual machine.
+  vm_type         = "e2-micro"                                    # Machine type specifying a particular CPU/RAM configuration.
+  vm_network_name = "default"                                     # The network to which the VM is connected.
+  vm_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
+  vm_disk_size    = 10     
 
-  # VM (Virtual Machine) configuration to specify the compute resources.
-  vm2_name         = "vm-2"                                        # Name identifier for the virtual machine.
-  vm2_type         = "e2-micro"                                    # Machine type specifying a particular CPU/RAM configuration.
-  vm2_network_name = "default"                                     # The network to which the VM is connected.
-  vm2_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
-  vm2_disk_size    = 10   
+  disk_name = ["google-vm1-migration", "google-swap"]   # Identifier for the first additional disk.
+  disk_mnt_name = ["migrations", "swap"]   # Identifier for the first additional disk.
+  disk_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
+  disk_size = 10            # Size of the disk in GB.
 
-  # Additional disk configurations for attachable storage.
-  disk1_name = "google-vm1-migration"   # Identifier for the first additional disk.
-  disk1_mnt_name = "migrations"   # Identifier for the first additional disk.
-  disk1_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk1_size = 10            # Size of the disk in GB.
   disk_migration_permissions = "0777"
   disk_migration_owner = "root"
   disk_migration_group = "root"
-
-  # Additional disk configurations for attachable storage.
-  disk2_name = "google-swap"  # Identifier for the first additional disk.
-  disk2_mnt_name = "swap"
-  disk2_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk2_size = 10            # Size of the disk in GB.
-
-  disk3_name = "google-vm2-migration"  # Identifier for the first additional disk.
-  disk3_mnt_name = "migrations"
-  disk3_type = "pd-standard" # Disk type; 'pd-standard' is a standard persistent disk.
-  disk3_size = 10            # Size of the disk in GB.
-
-  ansible = "${local.vm1_name},${local.vm2_name}"
 }
