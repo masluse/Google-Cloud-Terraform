@@ -25,7 +25,7 @@ resource "google_compute_instance" "default" {
 
   # Metadata configuration for the VM.
   metadata = {
-    enable-oslogin = "true" # Enables OS Login for the VM.
+    enable-oslogin         = "true" # Enables OS Login for the VM.
     block-project-ssh-keys = true
   }
 
@@ -35,7 +35,7 @@ resource "google_compute_instance" "default" {
   project = var.project_id # Google Cloud project ID where the VM is located.
 
   shielded_instance_config {
-    enable_secure_boot         = true
+    enable_secure_boot          = true
     enable_integrity_monitoring = true
     enable_vtpm                 = true
   }
@@ -49,10 +49,10 @@ resource "google_compute_instance" "default" {
 
 # Resource block for attaching a disk resource policy to a Compute Engine disk.
 resource "google_compute_disk_resource_policy_attachment" "default" {
-  project = var.project_id                  # Google Cloud project ID.
-  name    = var.backup_policy               # Name of the backup policy to attach.
-  disk    = var.name                        # Name of the disk to which the policy is attached.
-  zone    = var.zone                        # Zone where the disk is located.
+  project = var.project_id    # Google Cloud project ID.
+  name    = var.backup_policy # Name of the backup policy to attach.
+  disk    = var.name          # Name of the disk to which the policy is attached.
+  zone    = var.zone          # Zone where the disk is located.
 
   # Ensures that the policy attachment is created only after the VM instance is provisioned.
   depends_on = [

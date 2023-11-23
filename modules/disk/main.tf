@@ -9,10 +9,10 @@ resource "google_compute_disk" "default" {
 
 # Resource block for attaching a resource policy to the Compute Engine disk.
 resource "google_compute_disk_resource_policy_attachment" "default" {
-  project = var.project_id                  # Google Cloud project ID.
-  name    = var.backup_policy               # Name of the backup policy to attach.
-  disk    = var.disk_name                   # Name of the disk to which the policy is attached.
-  zone    = var.zone                        # Zone where the disk is located.
+  project = var.project_id    # Google Cloud project ID.
+  name    = var.backup_policy # Name of the backup policy to attach.
+  disk    = var.disk_name     # Name of the disk to which the policy is attached.
+  zone    = var.zone          # Zone where the disk is located.
 
   # Dependency to ensure attachment occurs after the disk is created.
   depends_on = [
@@ -22,7 +22,7 @@ resource "google_compute_disk_resource_policy_attachment" "default" {
 
 # Resource block for attaching the disk to a Compute Engine instance.
 resource "google_compute_attached_disk" "default" {
-  project     = var.project_id                # Google Cloud project ID.
+  project     = var.project_id # Google Cloud project ID.
   device_name = var.device_name
   zone        = var.zone                       # Zone where the instance and disk are located.
   disk        = google_compute_disk.default.id # ID of the disk to attach.

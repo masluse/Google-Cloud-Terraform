@@ -1,38 +1,39 @@
 # Define local variables for reuse within this Terraform module.
 locals {
-  # Script path
-  ansible_disk_add_path  = "../../scripts/ansible/disk_add.yaml"
-  ansible_swap_disk_path = "../../scripts/ansible/swap_disk.yaml"
-
-  # Project configuration
-  project_id = "prj-obilab-5873628173-mrtf" # Unique identifier for the project.
-  region     = "europe-west6"               # Region where resources will be provisioned.
-  zone       = "europe-west6-a"             # Specific zone within the region.
+  # Compute Engine configuration
+  project_id = "prj-obilab-5873628173-mrtf" # ID of the project to deploy resources to.
+  region     = "europe-west6"               # Region to deploy resources to.
+  zone       = "europe-west6-a"             # Zone to deploy resources to.
 
   # Service Account configuration for secure API management.
-  sa_account_id   = "sa-manuel-manuel02"   # ID for the service account.
-  sa_display_name = "Test Service Account" # User-friendly name for the service account.
+  cloud-plattform_sa_account-id   = "sa-manuel-manuel02"   # ID of the service account.
+  cloud-plattform_sa_display-name = "Test Service Account" # Display name of the service account.
 
   # Backup policy settings to define snapshot schedule and retention.
-  dp_name           = "nightly-snapshots"                      # Name for the snapshot policy.
-  dp_description    = "Nightly snapshots retained for 10 days" # Description of backup policy.
-  dp_start_time     = "02:00"                                  # Time when the snapshot process starts.
-  dp_retention_days = "10"                                     # Number of days to retain the snapshots.
-  dp_days_in_cycle  = "1"                                      # Frequency of the snapshot cycle in days.
+  compute-engine_dp_name           = "nightly-snapshots"                      # Name for the snapshot policy.
+  compute-engine_dp_description    = "Nightly snapshots retained for 10 days" # Description of backup policy.
+  compute-engine_dp_start-time     = "02:00"                                  # Time when the snapshot process starts.
+  compute-engine_dp_retention-days = "10"                                     # Number of days to retain the snapshots.
+  compute-engine_dp_days-in-cycle  = "1"                                      # Frequency of the snapshot cycle in days.
 
-  # VM (Virtual Machine) configuration to specify the compute resources.
-  vm_name         = ["vm-1", "vm-2"]                              # Name identifier for the virtual machine.
-  vm_type         = "e2-micro"                                    # Machine type specifying a particular CPU/RAM configuration.
-  vm_network_name = "default"                                     # The network to which the VM is connected.
-  vm_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # OS image for the VM.
-  vm_disk_size    = 10
+  # VM configuration to specify the VMs.
+  compute-engine_vm_name         = ["vm-1", "vm-2"]                              # Name identifier for the VM.
+  compute-engine_vm_type         = "e2-micro"                                    # Type of machine to create.
+  compute-engine_vm_network-name = "default"                                     # Name identifier for the network.
+  compute-engine_vm_image        = "ubuntu-os-cloud/ubuntu-2204-jammy-v20231030" # The image to use for the VM.
+  compute-engine_vm_disk-size    = 10                                            # Size of the boot disk in GB.
 
-  disk_name     = ["google-vm1-migration", "google-swap"] # Identifier for the first additional disk.
-  disk_mnt_name = ["migrations", "swap"]                  # Identifier for the first additional disk.
-  disk_type     = "pd-standard"                           # Disk type; 'pd-standard' is a standard persistent disk.
-  disk_size     = 10                                      # Size of the disk in GB.
+  # Disk configuration to specify the additional disks.
+  compute-engine_disk_name     = ["google-vm1-migration", "google-swap"] # Name identifier for the disk.
+  compute-engine_disk_mnt-name = ["migrations", "swap"]                  # Name identifier for the disk mount.
+  compute-engine_disk_type     = "pd-standard"                           # Type of disk to create.
+  compute-engine_disk_size     = 10                                      # Size of the disk in GB.
 
-  disk_migration_permissions = "0777"
-  disk_migration_owner       = "root"
-  disk_migration_group       = "root"
+  # Ansible configuration
+  ansible_path_disk_add              = "../../scripts/ansible/disk_add.yaml"  # Path to the disk add script.
+  ansible_path_swap_disk             = "../../scripts/ansible/swap_disk.yaml" # Path to the swap disk script.
+  ansible_disk_migration-permissions = "0777"                                 # Permissions for the disk.
+  ansible_disk_migration-owner       = "root"                                 # Owner for the disk.
+  ansible_disk_migration-group       = "root"                                 # Group for the disk.
+
 }
