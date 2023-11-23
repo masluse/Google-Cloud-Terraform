@@ -17,11 +17,11 @@ resource "null_resource" "ansible_provisioner" {
   # Ensures the execution occurs after the 40-second delay.
   depends_on = [time_sleep.wait_40_seconds]
 
-# Trigger für die Neuausführung hinzufügen, basierend auf den Werten von ansible_extra_vars
+  # Trigger für die Neuausführung hinzufügen, basierend auf den Werten von ansible_extra_vars
   triggers = {
     ansible_vars_hash = md5(jsonencode({
       ansible_extra_vars = local.ansible_extra_vars_command,
-      vm_name = var.vm_name
-    })) 
+      vm_name            = var.vm_name
+    }))
   }
 }
